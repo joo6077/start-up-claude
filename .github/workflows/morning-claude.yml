@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo locale-gen ko_KR.UTF-8
           TODAY=$(LC_TIME=ko_KR.UTF-8 date '+%Y년 %m월 %d일 %A %H:%M')
-          RESPONSE=$(claude -p "just say 'a'" --model haiku)
+          RESPONSE=$(claude -p "just say 'a'" --model claude-haiku-4-5-20251001)
           echo "response<<EOF" >> $GITHUB_OUTPUT
           echo "$RESPONSE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
