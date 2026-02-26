@@ -13,6 +13,19 @@ jobs:
         run: npm install -g @anthropic-ai/claude-code
 
       - name: Chat with Claude
+        id: claude
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: claude -p "hi" --model haiku
+        run: |
+          RESPONSE=$(claude -p "hi" --model haiku)
+          echo "response<<EOF" >> $GITHUB_OUTPUT
+          echo "$RESPONSE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send to Discord
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+            -d "{\"content\": \"🌅 **클로드 11시에 리셋 온!**\n${{ steps.claude.outputs.response }}\"}" \
+            $WEBHOOK_URL
