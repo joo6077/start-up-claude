@@ -29,7 +29,11 @@ jobs:
       - name: Send to Discord
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          CLAUDE_RESPONSE: ${{ steps.claude.outputs.response }}
+          CLAUDE_DATE: ${{ steps.claude.outputs.date }}
         run: |
-          curl -H "Content-Type: application/json" \
-            -d "{\"content\": \"⚡ **클로드 워밍업 완료**\n📅 ${{ steps.claude.outputs.date }}\n\n${{ steps.claude.outputs.response }}\"}" \
-            $WEBHOOK_URL
+          jq -n \
+            --arg date "$CLAUDE_DATE" \
+            --arg resp "$CLAUDE_RESPONSE" \
+            '{content: "⚡ **클로드 워밍업 완료**\n📅 \($date)\n\n\($resp)"}' \
+          | curl -H "Content-Type: application/json" -d @- $WEBHOOK_URL
