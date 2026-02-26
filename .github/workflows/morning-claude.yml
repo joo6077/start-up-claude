@@ -18,7 +18,8 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           TZ: Asia/Seoul
         run: |
-          TODAY=$(date '+%Y년 %m월 %d일 %A %H:%M')
+          sudo locale-gen ko_KR.UTF-8
+          TODAY=$(LC_TIME=ko_KR.UTF-8 date '+%Y년 %m월 %d일 %A %H:%M')
           RESPONSE=$(claude -p "hi" --model haiku)
           echo "response<<EOF" >> $GITHUB_OUTPUT
           echo "$RESPONSE" >> $GITHUB_OUTPUT
